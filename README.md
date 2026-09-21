@@ -143,15 +143,27 @@ node apps/zcode-cli/packages/cli/dist/zcode.cjs --help
 ```bash
 pnpm bundle:desktop
 
-# 指定目标平台与 CPU 架构
-pnpm bundle:desktop -- --os win --arch x64
+# Windows x64 NSIS installer
+pnpm bundle:desktop:win
 
+# Windows arm64 NSIS installer
+pnpm bundle:desktop:win-arm64
+
+# Generic target command
+pnpm bundle:desktop -- --os win --arch x64
 pnpm bundle:desktop -- --help
 ```
 
-默认目标为 macOS arm64，默认输出目录为 `packages/desktop/dist/`。`--os` 支持 `mac`、`win`、`linux`，`--arch` 支持 `x64`、`arm64`；实际打包与签名需要目标平台对应的工具和配置。
+默认目标为 macOS arm64，默认输出目录为 `packages/desktop/dist/`。`--os` 支持 `mac`、`win`、`linux`，`--arch` 支持 `x64`、`arm64`。
 
-安装：双击打开产物 DMG，将 ZCode 拖入"应用程序"。本地构建未签名，首次打开若被 macOS 拦截，执行：
+Windows 安装器输出：
+
+- `ZCode-<version>-win-x64.exe`
+- `ZCode-<version>-win-arm64.exe`
+
+双击 `.exe` 运行安装程序，安装目录可在向导中选择。未签名的本地构建可能触发 Windows SmartScreen；正式发布必须使用发布签名流程。
+
+macOS 安装：双击打开产物 DMG，将 ZCode 拖入“应用程序”。本地构建未签名，首次打开若被 macOS 拦截，执行：
 
 ```bash
 sudo xattr -rd com.apple.quarantine /Applications/ZCode.app

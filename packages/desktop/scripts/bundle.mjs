@@ -715,6 +715,7 @@ async function main() {
   const buildEnv = {
     ZCODE_TARGET_OS: os,
     ZCODE_TARGET_ARCH: arch,
+    ZCODE_SKIP_REMOTE_ASSETS: process.env.ZCODE_SKIP_REMOTE_ASSETS ?? (os === "win" ? "1" : "0"),
     ...createElectronRuntimeMirrorEnv(resolveElectronMirror()),
     ...createElectronBuilderBinariesMirrorEnv(resolveElectronBuilderBinariesMirror()),
   };

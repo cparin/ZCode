@@ -38,6 +38,7 @@ import type { IPromptAttachmentTransferService } from "./prompt-attachment-trans
 import type { IWindowControllerService } from "./window-controller/windowController.js";
 import type { IOnboardingRecordService } from "./onboarding/onboardingRecord.js";
 import type { IConversationShareService } from "./conversation-share/conversationShare.js";
+import type { IPortForwardingService } from "./port-forwarding/portForwarding.js";
 
 /** UI 层消费的统一服务接口 */
 export interface IServiceAccessor {
@@ -47,6 +48,8 @@ export interface IServiceAccessor {
   readonly gitCheckpointService: IGitCheckpointService;
   readonly systemService: ISystemService;
   readonly terminalService: ITerminalService;
+  /** SSH desktop-only remote port forwarding; unsupported hosts omit it. */
+  readonly portForwardingService?: IPortForwardingService;
   readonly settingService: ISettingService;
   /** Onboarding 完成记录（本地持久化）；旧测试 double / 不支持的 host 可不提供。 */
   readonly onboardingRecordService?: IOnboardingRecordService;

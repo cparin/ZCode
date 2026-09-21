@@ -114,6 +114,7 @@ import type { CodeViewerSource } from "@/lib/codeViewer.js";
 import { WorkspaceFileTree } from "@/WorkspaceFileTree.js";
 import { WorkspaceArchivedTasksFlatSection } from "@/WorkspaceArchivedTasksFlatSection.js";
 import { WorkspaceSidebarFooter } from "@/WorkspaceSidebarFooter.js";
+import { PortForwardPanel } from "@/PortForwardPanel.js";
 import { WorkspacePinnedTasksSection } from "@/WorkspacePinnedTasksSection.js";
 import { WorkspaceTimelineTasksSection } from "@/WorkspaceTimelineTasksSection.js";
 import { WorkspaceGroupedTasksSection } from "@/WorkspaceGroupedTasksSection.js";
@@ -1641,6 +1642,11 @@ export const WorkspaceSidebar = memo(function WorkspaceSidebarComponent({
               </div>
             </div>
           </div>
+          <PortForwardPanel
+            workspacePath={workspacePath}
+            remoteSessionId={workspaceRemoteSessionId}
+            workspaceIdentity={workspaceIdentity}
+          />
 
           <WorkspaceSidebarFooter
             className="pr-3"

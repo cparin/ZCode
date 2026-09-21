@@ -1,6 +1,7 @@
 /* eslint-disable max-lines -- SSH backend 集中维护连接、exec、SFTP 上传和 fallback 进度链路；集中维护以避免拆分引入远端连接回归。 */
 import { Client as SSHClient } from "ssh2";
 import type { ConnectConfig } from "ssh2";
+import type { Duplex } from "node:stream";
 import { createReadStream } from "node:fs";
 import { posix } from "node:path";
 import { Emitter } from "@zcode/rpc";
@@ -197,6 +198,18 @@ export class SSHBackend implements IRemoteBackend {
       this.client.once("ready", handleReady);
       this.client.once("error", handleConnectError);
       this.client.connect(this.config);
+    });
+  }
+  async forwardOut(remoteHost: string, remotePort: number): Promise<Duplex> {
+    await this.ensureConnected();
+    return await new Promise<Duplex>((resolve, reject) => {
+      this.client.forwardOut("127.0.0.1", 0, remoteHost, remotePort, (error, stream) => {
+        if (error) {
+          reject(normalizeUnknownError(error, `SSH forward to ${remoteHost}:${remotePort} failed`));
+          return;
+        }
+        resolve(stream);
+      });
     });
   }
 

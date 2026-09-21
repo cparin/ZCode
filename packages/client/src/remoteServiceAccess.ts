@@ -38,6 +38,7 @@ import {
   ISettingsSyncService,
   IFeedbackService,
   IPromptAttachmentTransferService,
+  IPortForwardingService,
   IWindowControllerService,
   type IServiceAccessor,
 } from "@zcode/services";
@@ -90,6 +91,7 @@ export class RemoteServiceAccess implements IServiceAccessor {
   readonly settingsSyncService: ISettingsSyncService;
   readonly feedbackService: IFeedbackService;
   readonly promptAttachmentTransferService: IPromptAttachmentTransferService;
+  readonly portForwardingService?: IPortForwardingService;
 
   constructor(channelClient: IChannelClient) {
     this.fileService = ProxyChannel.toService<IFileService>(
@@ -213,6 +215,9 @@ export class RemoteServiceAccess implements IServiceAccessor {
     );
     this.promptAttachmentTransferService = ProxyChannel.toService<IPromptAttachmentTransferService>(
       channelClient.getChannel(IPromptAttachmentTransferService.channelName),
+    );
+    this.portForwardingService = ProxyChannel.toService<IPortForwardingService>(
+      channelClient.getChannel(IPortForwardingService.channelName),
     );
   }
 }

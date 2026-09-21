@@ -120,6 +120,7 @@ import {
 } from "./remoteMediaPreviewProxy.js";
 import { createHostRemoteWorkspaceProxyState } from "./hostRemoteWorkspaceProxyState.js";
 import { createRemoteWorkspaceServiceCollection } from "./remoteWorkspaceServiceCollection.js";
+import { PortForwardManager } from "./portForwardManager.js";
 import { getRemoteProviderProvisioningExecutor } from "./remoteProviderProvisioningService.js";
 import { createRemotePromptAttachmentTransferService } from "./promptAttachmentTransferService.js";
 import { shouldReportHostConsoleError, stringifyHostLogArg } from "./hostLog.js";
@@ -1661,6 +1662,8 @@ async function createWindowRemoteConnectionHandle(params: {
         logger.warn("remote prompt attachment janitor failed", error),
     },
   );
+  const portForwardingService =
+    params.target.kind === "ssh" ? new PortForwardManager(backendConnection.backend) : undefined;
   const services = createRemoteWorkspaceServiceCollection({
     clientConfigService,
     connectionServices: backendConnection.services,
@@ -1682,6 +1685,7 @@ async function createWindowRemoteConnectionHandle(params: {
     runtimePreferencesBridge: {
       onError: (error: unknown) => logger.warn("remote runtime preferences bridge failed", error),
     },
+    portForwardingService,
   });
 
   let disposed = false;
@@ -1728,7 +1732,7 @@ async function createWindowRemoteConnectionHandle(params: {
       }
       disposed = true;
       closeListeners.clear();
-      resourceTelemetry.dispose();
+      await portForwardingService?.dispose();
       await disposeServiceResourcesAndWait(services);
       await disposeHostRemoteConnection(connection);
     },

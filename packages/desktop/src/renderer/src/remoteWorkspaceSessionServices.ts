@@ -1,8 +1,10 @@
+import type { RemoteTarget } from "@zcode/shared";
 import type { IServiceAccessor } from "@zcode/services";
 
 export function buildRemoteWorkspaceSessionServices(
   baseServices: IServiceAccessor,
   remoteServices: IServiceAccessor,
+  target?: RemoteTarget,
 ): IServiceAccessor {
   return {
     ...baseServices,
@@ -12,6 +14,8 @@ export function buildRemoteWorkspaceSessionServices(
     gitCheckpointService: remoteServices.gitCheckpointService,
     systemService: remoteServices.systemService,
     terminalService: remoteServices.terminalService,
+    portForwardingService:
+      target ? (target.kind === "ssh" ? remoteServices.portForwardingService : undefined) : remoteServices.portForwardingService,
     // 远端附件必须由当前 workspace host 上传并改写路径；沿用本地服务会把
     // 桌面机的绝对路径原样传给 SSH/WSL/Docker 中的 CLI，导致附件无法读取。
     promptAttachmentTransferService: remoteServices.promptAttachmentTransferService,

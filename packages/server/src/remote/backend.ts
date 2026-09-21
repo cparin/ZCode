@@ -1,5 +1,5 @@
+import type { Duplex } from "node:stream";
 import type { IDisposable, Event } from "@zcode/rpc";
-
 export interface RemoteEnvironment {
   platform: string; // "linux" | "darwin"
   arch: string; // "x64" | "arm64"
@@ -42,6 +42,8 @@ export interface IRemoteBackend extends IDisposable {
   upload(localPath: string, remotePath: string, options?: RemoteUploadOptions): Promise<void>;
   /** Execute a command on the remote machine, returning stdio streams */
   exec(command: string): Promise<StdioStream>;
+  /** Open a direct TCP channel through the SSH transport when supported. */
+  forwardOut?(remoteHost: string, remotePort: number): Promise<Duplex>;
   /** Check if a remote file exists */
   exists(remotePath: string): Promise<boolean>;
   /** Read a small remote file (e.g. version string) */

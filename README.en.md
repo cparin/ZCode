@@ -139,13 +139,30 @@ See [third-party/README.md](third-party/README.md) for notice generation, distri
 ```bash
 pnpm bundle:desktop
 
-# Set the target platform and CPU architecture
-pnpm bundle:desktop -- --os win --arch x64
+# Windows x64 NSIS installer
+pnpm bundle:desktop:win
 
+# Windows arm64 NSIS installer
+pnpm bundle:desktop:win-arm64
+
+# Generic target command
+pnpm bundle:desktop -- --os win --arch x64
 pnpm bundle:desktop -- --help
 ```
 
-The default target is macOS arm64, and the default output directory is `packages/desktop/dist/`. `--os` accepts `mac`, `win`, or `linux`; `--arch` accepts `x64` or `arm64`. Packaging and signing require the tools and configuration for the target platform.
+The default target is macOS arm64, and the default output directory is `packages/desktop/dist/`. `--os` accepts `mac`, `win`, or `linux`; `--arch` accepts `x64` or `arm64`.
+
+Windows installer artifacts:
+
+- `ZCode-<version>-win-x64.exe`
+- `ZCode-<version>-win-arm64.exe`
+
+Double-click the `.exe` to run the installer and choose the installation directory in the wizard. Unsigned local builds may trigger Windows SmartScreen; production releases must use the release signing process.
+macOS installation: open the DMG and drag ZCode to Applications. Local builds are unsigned; if macOS blocks the first launch:
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/ZCode.app
+```
 
 ### ZCode CLI distribution
 

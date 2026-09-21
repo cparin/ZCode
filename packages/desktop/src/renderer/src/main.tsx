@@ -221,6 +221,7 @@ function registerRemoteWorkspaceServicePort(params: RemoteWorkspaceServicePortRe
   const services = buildRemoteWorkspaceSessionServices(
     baseServicesForRemoteSessions,
     remoteServices,
+    params.target,
   );
   registerRemoteWorkspaceSession({
     sessionId: params.sessionId,

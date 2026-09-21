@@ -34,6 +34,7 @@ import {
   IMemoryService,
   ISettingsSyncService,
   IPromptAttachmentTransferService,
+  IPortForwardingService,
   type IServiceAccessor,
 } from "@zcode/services";
 import {
@@ -90,6 +91,7 @@ export function createRemoteWorkspaceServiceCollection(params: {
   createRemotePromptAttachmentTaskService: <T extends object>(service: T) => T;
   createRemotePromptAttachmentSessionService: <T extends object>(service: T) => T;
   promptAttachmentTransferService: IPromptAttachmentTransferService;
+  portForwardingService?: IPortForwardingService;
   runtimePreferencesBridge: {
     onError: (error: unknown) => void;
   };
@@ -364,6 +366,9 @@ export function createRemoteWorkspaceServiceCollection(params: {
       createSettingsSyncService({ settingService: localSettingService }),
     )
     .register(IPromptAttachmentTransferService, params.promptAttachmentTransferService);
+  if (params.portForwardingService) {
+    services.register(IPortForwardingService, params.portForwardingService);
+  }
   registerHostApiNetworkTransportForDispose(services, hostApiNetworkTransport);
   registerRemoteProviderProvisioningExecutor(services, remoteProviderProvisioningService);
   return services;
